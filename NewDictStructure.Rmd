@@ -1,0 +1,66 @@
+---
+title: "NewDictStructure"
+author: "YANG YANG yy2819"
+date: "2018-11-28"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(stringr)
+url ="http://www.gutenberg.org/cache/epub/1260/pg1260.txt"
+url <- "http://www.gutenberg.org/cache/epub/55/pg55.txt"
+raw <- readLines(url, encoding = "UTF-8")
+vec <- unlist( str_split(raw," ") )
+vocab=unique(vec)
+vocab=vocab[-which(vocab=="")]
+
+n=length(vocab)
+p_vocab=1:n
+names(p_vocab)=vocab
+v1=vocab[1]
+vn=vocab[n]
+vm=vocab[n%/%2]
+
+#check
+p_vocab[v1]
+p_vocab[vn]
+
+# 10k calls
+system.time(for (i in 1:10000) temp=1) 
+system.time(for (i in 1:10000) temp=p_vocab[v1])
+system.time(for (i in 1:10000) temp=p_vocab[vm]) 
+system.time(for (i in 1:10000) temp=p_vocab[vn]) 
+```
+We see that the time cost of vector calls linearly increases with index.
+
+what if p_vocab is a matrix
+```{r}
+matrix_vocab=matrix(rep(p_vocab,20),ncol = 20)
+rownames(matrix_vocab)=vocab
+matrix_vocab[vn,1]
+system.time(for (i in 1:10000) temp=matrix_vocab[vn,1]) 
+```
+
+
+```{r new dict}
+my_dict <- new.env()
+for(i in 1:n){
+  my_dict[[vocab[i]]]=i
+}
+#check
+my_dict[[v1]]
+my_dict[[vn]]
+
+# 10k calls
+system.time(for (i in 1:10000) temp=my_dict[[v1]])
+system.time(for (i in 1:10000) temp=my_dict[[vn]]) 
+# 10m calls
+system.time(for (i in 1:10000000) temp=my_dict[[v1]])
+system.time(for (i in 1:10000000) temp=my_dict[[vn]])
+```
+We see that the time cost is almost independent of index, and much faster.(1000 times faster on average while the corpus has 28020 unique words)
