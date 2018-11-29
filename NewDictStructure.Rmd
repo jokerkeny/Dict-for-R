@@ -12,8 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(stringr)
-url ="http://www.gutenberg.org/cache/epub/1260/pg1260.txt"
-url <- "http://www.gutenberg.org/cache/epub/55/pg55.txt"
+url <- "http://www.gutenberg.org/cache/epub/1260/pg1260.txt"
 raw <- readLines(url, encoding = "UTF-8")
 vec <- unlist( str_split(raw," ") )
 vocab=unique(vec)
