@@ -1,5 +1,6 @@
 # Dict-for-R
-
+*Author: yy2819*  
+*for [ADSproj4_grp2](https://github.com/TZstatsADS/Fall2018-Project4-sec2--sec2proj4_grp2)*
 
 ## How to Use
 ```r
